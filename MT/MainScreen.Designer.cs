@@ -41,6 +41,7 @@
             this.OrderRowsName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.OrderRowsPacking = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.OrderRowsQuantity = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SaveButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.orderRowsDataGrid)).BeginInit();
             this.SuspendLayout();
             // 
@@ -148,11 +149,22 @@
             this.OrderRowsQuantity.HeaderText = "Quantity";
             this.OrderRowsQuantity.Name = "OrderRowsQuantity";
             // 
+            // SaveButton
+            // 
+            this.SaveButton.Location = new System.Drawing.Point(1138, 412);
+            this.SaveButton.Name = "SaveButton";
+            this.SaveButton.Size = new System.Drawing.Size(75, 23);
+            this.SaveButton.TabIndex = 8;
+            this.SaveButton.Text = "Save";
+            this.SaveButton.UseVisualStyleBackColor = true;
+            this.SaveButton.Click += new System.EventHandler(this.SaveButton_Click);
+            // 
             // MainScreen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1433, 539);
+            this.Controls.Add(this.SaveButton);
             this.Controls.Add(this.orderRowsDataGrid);
             this.Controls.Add(this.orderingCompanyComboBox);
             this.Controls.Add(this.companyLabel);
@@ -184,6 +196,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn OrderRowsName;
         private System.Windows.Forms.DataGridViewComboBoxColumn OrderRowsPacking;
         private System.Windows.Forms.DataGridViewTextBoxColumn OrderRowsQuantity;
+        private System.Windows.Forms.Button SaveButton;
     }
 }
 
