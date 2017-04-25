@@ -14,13 +14,15 @@ namespace MT
 {
     public partial class MainScreen : Form
     {
+        private DataSet datasetMT;
         private SqlDataAdapter productItemsAdapter;
         private SqlDataAdapter orderRowsAdapter;
-
-        private DataSet DatasetMT { get; set; }
-        private SqlDataAdapter CustomersAdapter { get; set; }
-        private SqlDataAdapter OrdersAdapter { get; set; }
-        private SqlConnection ConnectionMT { get; set; }
+        private SqlDataAdapter customersAdapter;
+        private SqlDataAdapter ordersAdapter;
+        private SqlConnection connectionMT;
+        private SqlDataAdapter productsAdapter;
+        private SqlDataAdapter colorsAdapter;
+        private SqlDataAdapter packingsAdapter;
 
         private void Reset()
         {
@@ -31,22 +33,22 @@ namespace MT
 
         private void RecordOrderInDatabase()
         {
-            DataRow order = this.DatasetMT.Tables["Orders"].NewRow();
+            DataRow order = this.datasetMT.Tables["Orders"].NewRow();
 
             order["CustomerId"] = this.orderingCompanyComboBox.SelectedValue;
             order["Date"] = this.orderDate.Value;
 
-            this.DatasetMT.Tables["Orders"].Rows.Add(order);
+            this.datasetMT.Tables["Orders"].Rows.Add(order);
 
-            SqlCommandBuilder builder = new SqlCommandBuilder(this.OrdersAdapter);
+            SqlCommandBuilder builder = new SqlCommandBuilder(this.ordersAdapter);
             builder.GetInsertCommand();
 
-            this.OrdersAdapter.Update(this.DatasetMT, "Orders");
+            this.ordersAdapter.Update(this.datasetMT, "Orders");
 
             foreach (DataGridViewRow row in this.orderRowsDataGrid.Rows)
             {
-                DataRow orderRow = this.DatasetMT.Tables["OrderRows"].NewRow();
-                orderRow["OrderId"] = this.DatasetMT.Tables["Orders"].Rows.Count;
+                DataRow orderRow = this.datasetMT.Tables["OrderRows"].NewRow();
+                orderRow["OrderId"] = this.datasetMT.Tables["Orders"].Rows.Count;
 
                 SqlCommand cmd = new SqlCommand();
                 cmd.CommandType = CommandType.Text;
@@ -64,16 +66,16 @@ namespace MT
                     " AND ColorId = " + selectedColor.ToString() +
                     " AND PackingId = " + selectedPacking.ToString();
 
-                cmd.Connection = this.ConnectionMT;
+                cmd.Connection = this.connectionMT;
 
                 orderRow["ProductItemId"] = cmd.ExecuteScalar();
                 orderRow["Quantity"] = row.Cells[4].Value;
 
-                this.DatasetMT.Tables["OrderRows"].Rows.Add(orderRow);
+                this.datasetMT.Tables["OrderRows"].Rows.Add(orderRow);
                 builder = new SqlCommandBuilder(this.orderRowsAdapter);
                 builder.GetInsertCommand();
 
-                this.orderRowsAdapter.Update(this.DatasetMT, "OrderRows");
+                this.orderRowsAdapter.Update(this.datasetMT, "OrderRows");
 
             }
         }
@@ -83,7 +85,7 @@ namespace MT
 
             try
             {
-                this.ConnectionMT =
+                this.connectionMT =
                    new SqlConnection(
                        @"Data Source=(local);Database=MT;Integrated Security=true;"
                    );
@@ -91,43 +93,43 @@ namespace MT
                 InitializeComponent();
 
                 string queryCustomers = "SELECT * FROM Customers";
-                this.CustomersAdapter = new SqlDataAdapter(queryCustomers, ConnectionMT);
+                this.customersAdapter = new SqlDataAdapter(queryCustomers, connectionMT);
                 string queryOrders = "SELECT * FROM Orders";
-                this.OrdersAdapter = new SqlDataAdapter(queryOrders, ConnectionMT);
+                this.ordersAdapter = new SqlDataAdapter(queryOrders, connectionMT);
                 string queryOrderRows = "SELECT * FROM OrderRows";
-                this.orderRowsAdapter = new SqlDataAdapter(queryOrderRows, ConnectionMT);
+                this.orderRowsAdapter = new SqlDataAdapter(queryOrderRows, connectionMT);
                 string queryProducts = "SELECT * FROM Products";
-                SqlDataAdapter productsAdapter = new SqlDataAdapter(queryProducts, ConnectionMT);
+                this.productsAdapter = new SqlDataAdapter(queryProducts, connectionMT);
                 string queryProductItems = "SELECT * FROM ProductItems";
-                this.productItemsAdapter = new SqlDataAdapter(queryProductItems, ConnectionMT);
+                this.productItemsAdapter = new SqlDataAdapter(queryProductItems, connectionMT);
                 string queryColors = "SELECT * FROM Colors";
-                SqlDataAdapter colorsAdapter = new SqlDataAdapter(queryColors, ConnectionMT);
+                this.colorsAdapter = new SqlDataAdapter(queryColors, connectionMT);
                 string queryPackings = "SELECT * FROM Packings";
-                SqlDataAdapter packingsAdapter = new SqlDataAdapter(queryPackings, ConnectionMT);
+                this.packingsAdapter = new SqlDataAdapter(queryPackings, connectionMT);
 
-                ConnectionMT.Open();
-                this.DatasetMT = new DataSet();
-                CustomersAdapter.Fill(this.DatasetMT, "Customers");
-                OrdersAdapter.Fill(this.DatasetMT, "Orders");
-                orderRowsAdapter.Fill(this.DatasetMT, "OrderRows");
-                productsAdapter.Fill(this.DatasetMT, "Products");
-                productItemsAdapter.Fill(this.DatasetMT, "ProductItems");
-                colorsAdapter.Fill(this.DatasetMT, "Colors");
-                packingsAdapter.Fill(this.DatasetMT, "Packings");
+                connectionMT.Open();
+                this.datasetMT = new DataSet();
+                customersAdapter.Fill(this.datasetMT, "Customers");
+                ordersAdapter.Fill(this.datasetMT, "Orders");
+                orderRowsAdapter.Fill(this.datasetMT, "OrderRows");
+                productsAdapter.Fill(this.datasetMT, "Products");
+                productItemsAdapter.Fill(this.datasetMT, "ProductItems");
+                colorsAdapter.Fill(this.datasetMT, "Colors");
+                packingsAdapter.Fill(this.datasetMT, "Packings");
 
-                orderingCompanyComboBox.DataSource = this.DatasetMT.Tables["Customers"];
+                orderingCompanyComboBox.DataSource = this.datasetMT.Tables["Customers"];
                 orderingCompanyComboBox.DisplayMember = "Name";
                 orderingCompanyComboBox.ValueMember = "Id";
 
-                this.OrderRowsArticleNo.DataSource = this.DatasetMT.Tables["Products"];
+                this.OrderRowsArticleNo.DataSource = this.datasetMT.Tables["Products"];
                 this.OrderRowsArticleNo.DisplayMember = "ArticleNumber";
                 this.OrderRowsArticleNo.ValueMember = "Id";
 
-                this.OrderRowsColor.DataSource = this.DatasetMT.Tables["Colors"];
+                this.OrderRowsColor.DataSource = this.datasetMT.Tables["Colors"];
                 this.OrderRowsColor.DisplayMember = "Color";
                 this.OrderRowsColor.ValueMember = "Id";
 
-                this.OrderRowsPacking.DataSource = this.DatasetMT.Tables["Packings"];
+                this.OrderRowsPacking.DataSource = this.datasetMT.Tables["Packings"];
                 this.OrderRowsPacking.DisplayMember = "Packing";
                 this.OrderRowsPacking.ValueMember = "Id";
 
@@ -164,7 +166,7 @@ namespace MT
                 var articleNumber = senderItem.Rows[e.RowIndex].Cells[e.ColumnIndex].EditedFormattedValue;   //this.orderRowsDataGrid.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
                 cmd.CommandText = "SELECT ProductName FROM Products WHERE ArticleNumber=" +
                     articleNumber;
-                cmd.Connection = this.ConnectionMT;
+                cmd.Connection = this.connectionMT;
                 var productName = cmd.ExecuteScalar();
 
                 this.orderRowsDataGrid.Rows[e.RowIndex].Cells[2].Value = productName;
