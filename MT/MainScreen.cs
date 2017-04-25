@@ -76,13 +76,11 @@ namespace MT
                 builder.GetInsertCommand();
 
                 this.orderRowsAdapter.Update(this.datasetMT, "OrderRows");
-
             }
         }
 
         public MainScreen()
         {
-
             try
             {
                 this.connectionMT =
@@ -132,10 +130,6 @@ namespace MT
                 this.OrderRowsPacking.DataSource = this.datasetMT.Tables["Packings"];
                 this.OrderRowsPacking.DisplayMember = "Packing";
                 this.OrderRowsPacking.ValueMember = "Id";
-
-                //this.OrderRowsColor
-
-                //this.ConnectionMT.Close();
             }
             catch (Exception ex)
             {
@@ -146,7 +140,6 @@ namespace MT
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-
         }
 
         private void SaveButton_Click(object sender, EventArgs e)
@@ -175,7 +168,6 @@ namespace MT
 
         private void orderRowsDataGrid_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
-
         }
     }
 }
