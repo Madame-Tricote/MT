@@ -121,6 +121,8 @@
             this.orderRowsDataGrid.Size = new System.Drawing.Size(1075, 150);
             this.orderRowsDataGrid.TabIndex = 7;
             this.orderRowsDataGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
+            this.orderRowsDataGrid.CellLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.orderRowsDataGrid_CellLeave);
+            this.orderRowsDataGrid.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.orderRowsDataGrid_CellValidating);
             // 
             // OrderRowsArticleNo
             // 

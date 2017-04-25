@@ -152,5 +152,28 @@ namespace MT
             this.RecordOrderInDatabase();
             this.Reset();
         }
+
+        private void orderRowsDataGrid_CellLeave(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex==0)
+            {
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.Text;
+
+                DataGridView senderItem = (DataGridView)sender;
+                var articleNumber = senderItem.Rows[e.RowIndex].Cells[e.ColumnIndex].EditedFormattedValue;   //this.orderRowsDataGrid.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
+                cmd.CommandText = "SELECT ProductName FROM Products WHERE ArticleNumber=" +
+                    articleNumber;
+                cmd.Connection = this.ConnectionMT;
+                var productName = cmd.ExecuteScalar();
+
+                this.orderRowsDataGrid.Rows[e.RowIndex].Cells[2].Value = productName;
+            }
+        }
+
+        private void orderRowsDataGrid_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
+        {
+
+        }
     }
 }
